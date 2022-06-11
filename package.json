@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "expressjs": "^1.0.1",
+    "nodemon": "^2.0.16",
+    "pg": "^8.7.3"
+  },
+  "name": "hirejob",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Candra-Julius/HireJob-BackEnd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Candra-Julius/HireJob-BackEnd/issues"
+  },
+  "homepage": "https://github.com/Candra-Julius/HireJob-BackEnd#readme",
+  "description": ""
+}
