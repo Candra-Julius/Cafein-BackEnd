@@ -209,7 +209,7 @@ const authControl = {
     },
     resetPassword: async(req, res, next) => {
         try {
-            const {email} = jwt.decode(req.params.token)
+            const {email} = jwt.verify(req.params.token, process.env.SECRET_KEY_JWT)
             console.log(email);
             const {rowCount: workCount} = await authModel.checkEmailWorker(email)
             const {rowCount: employRow} = await authModel.checkEmailEmploy(email)
