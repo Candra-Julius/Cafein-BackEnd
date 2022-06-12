@@ -4,12 +4,14 @@ const createError = require('http-errors')
 const app = express()
 const PORT = process.env.PORT || 2000
 const versioning = require('./src/route/index')
+const cors = require('cors')
 
 
 //middleware
 app.use(express())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
+app.use(cors())
 
 // routing
 app.use('/v1', versioning)
