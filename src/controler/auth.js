@@ -25,7 +25,7 @@ const authControl = {
                     })
                 }else{
                     const payload = {
-                        id: dataW.id,
+                        id: dataW.iduser,
                         email: dataW.email,
                         role: dataW.role,
                         status: dataW.status
@@ -54,7 +54,7 @@ const authControl = {
                 })
                 }else {
                     const payload = {
-                        id: dataE.id,
+                        id: dataE.idcompany,
                         email: dataE.email,
                         role: dataE.role,
                         status: dataE.status
