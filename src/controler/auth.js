@@ -38,6 +38,7 @@ const authControl = {
                         dataW.token = webToken.generateToken(payload)
                         dataW.refreshToken = webToken.generateRefreshToken(payload)
                         delete dataW.password
+                        console.log(payload);
                         res.status(200).json({
                             message: `Welcome ${dataW.fullname}`,
                             data: payload,
@@ -67,8 +68,9 @@ const authControl = {
                     dataE.token = webToken.generateToken(payload)
                     dataE.refreshToken = webToken.generateRefreshToken(payload)
                     delete dataE.password
+                    console.log(dataE);
                         res.status(200).json({
-                            message: `Welcome ${dataE.fullname}`,
+                            message: `Welcome ${dataE.name}`,
                             data: payload,
                             token: dataE.token,
                             refreshToken: dataE.refreshToken
