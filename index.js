@@ -11,7 +11,12 @@ const cors = require('cors')
 app.use(express())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": true,
+  "optionsSuccessStatus": 204
+}))
 
 // routing
 app.use('/v1', versioning)
