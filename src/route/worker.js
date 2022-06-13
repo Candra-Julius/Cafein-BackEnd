@@ -7,4 +7,6 @@ router
 .get('/profile', isLogin, workerControl.getProfile)
 .post('/profile', isLogin, workerControl.editProfile)
 .post('/skill', isLogin, workerControl.addSkill)
+.post('/workexp', isLogin, workerControl.addWorkExp)
+.post('/portofolio', isLogin, workerControl.addPortofolio)
 module.exports = router
