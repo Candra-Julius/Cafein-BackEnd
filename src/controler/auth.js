@@ -35,15 +35,13 @@ const authControl = {
                             message: 'please check your email to activate your account'
                         })
                     }else{
-                        dataW.token = webToken.generateToken(payload)
-                        dataW.refreshToken = webToken.generateRefreshToken(payload)
+                        payload.token = webToken.generateToken(payload)
+                        payload.refreshToken = webToken.generateRefreshToken(payload)
                         delete dataW.password
                         console.log(payload);
                         res.status(200).json({
                             message: `Welcome ${dataW.fullname}`,
                             data: payload,
-                            token: dataW.token,
-                            refreshToken:dataW.refreshToken
                         })
                     }
                 }
@@ -65,15 +63,13 @@ const authControl = {
                             message: 'please check your email to activate your account'
                         })
                     }else {
-                    dataE.token = webToken.generateToken(payload)
-                    dataE.refreshToken = webToken.generateRefreshToken(payload)
+                    payload.token = webToken.generateToken(payload)
+                    payload.refreshToken = webToken.generateRefreshToken(payload)
                     delete dataE.password
                     console.log(dataE);
                         res.status(200).json({
                             message: `Welcome ${dataE.name}`,
                             data: payload,
-                            token: dataE.token,
-                            refreshToken: dataE.refreshToken
                         })
                     }
                 } 
