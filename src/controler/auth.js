@@ -106,12 +106,13 @@ const authControl = {
                 status: 'inactive'
             } 
             //from nodemailer
-            accActivation(data)
+            
             //input to worker tabel
             await authModel.workRegis(data)
             res.status(201).json({
                 message: 'Your account has been created. please check your email to activate your account'
             })
+            accActivation(data)
         }
         } catch (error) {
             console.log(error);
@@ -140,11 +141,11 @@ const authControl = {
                 role: 'Recruiter',
                 status: 'inactive'
             } 
-            accActivation(data)
             await authModel.empRegis(data)
             res.status(201).json({
                 message: 'Your account has been created. please check your email to activate your account'
             })
+            accActivation(data)
         }
         } catch (error) {
             console.log(error);
