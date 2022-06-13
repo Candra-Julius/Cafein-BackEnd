@@ -14,8 +14,10 @@ const verif = {
                 next(createError[401]('Please Login'))
             }
         } catch (error) {
-            console.log(error);
-            next(createError[500]('Login Verification Error'))
+            console.log(error)
+      res.json({
+        error
+      })
         }
     }
 }

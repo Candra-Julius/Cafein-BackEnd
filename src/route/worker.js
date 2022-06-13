@@ -5,5 +5,6 @@ const router = express.Router()
 
 router
 .get('/profile', isLogin, workerControl.getProfile)
-
+.post('/profile', isLogin, workerControl.editProfile)
+.post('/skill', isLogin, workerControl.addSkill)
 module.exports = router
