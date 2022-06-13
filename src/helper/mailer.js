@@ -20,7 +20,7 @@ const Mailing = {
             from: '"HireJob"<HireJobTeamCafein@gmail.com>',
             to: data.email,
             subject: 'Email Verification',
-            text: `http://localhost:2000/v1/auth/activate/${token}/${data.id}`,
+            text: `https://hire-job-app.herokuapp.com/v1/auth/activate/${token}/${data.id}`,
         })
         console.log('Message sent: %s', info.messageId)
     },
@@ -34,7 +34,7 @@ const Mailing = {
             from: '"HireJob"<HireJobTeamCafein@gmail.com>',
             to: data.email,
             subject: 'Reset Pasword',
-            text: `http://localhost:2000/v1/auth/forgot/${token}`,
+            text: `https://hire-job-app.herokuapp.com/v1/auth/forgot/${token}`,
         })
         console.log('Message sent: %s', info.messageId)
     },
