@@ -1,12 +1,14 @@
 const express = require('express')
 const workerControl = require('../controler/worker')
+const { upload } = require('../helper/filehandler')
 const { isLogin } = require('../middleware/verification')
 const router = express.Router()
 
 router
 .get('/profile', isLogin, workerControl.getProfile)
-.post('/profile', isLogin, workerControl.editProfile)
+.put('/profile', isLogin, workerControl.editProfile)
 .post('/skill', isLogin, workerControl.addSkill)
 .post('/workexp', isLogin, workerControl.addWorkExp)
-.post('/portofolio', isLogin, workerControl.addPortofolio)
+.post('/portofolio', isLogin,upload.single('image'), workerControl.addPortofolio)
+.post('/upload', isLogin, upload.single('avatar'), workerControl.uploadAva)
 module.exports = router

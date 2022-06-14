@@ -1,6 +1,12 @@
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors') 
-const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio } = require('../modul/worker')
+const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva } = require('../modul/worker')
+const  cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 const workerControl = {
     getProfile: async(req, res, next) => {
@@ -89,17 +95,37 @@ const workerControl = {
     },
     addPortofolio: async(req, res, next) => {
         try {
-            const id = req.payload
+            const result = await cloudinary.uploader.upload(req.file.path)
+            const id = req.payload.id
             const {aplicationname, repolink, portotype} = req.body
             const data = {
                 id,
                 aplicationname,
                 repolink,
-                portotype
+                portotype,
+                img: result.secure_url
             }
             await addPortofolio(data)
             res.status(200).json({
                 message: 'succsess',
+                data
+            })
+        } catch (error) {
+            console.log(error);
+            next(createError[500]('Internal Server Error'))
+        }
+    },
+    uploadAva: async (req, res, next) =>{
+        try {
+            const id = req.payload.id
+            const result = await cloudinary.uploader.upload(req.file.path)
+            const data = {
+                id,
+                image: result.secure_url
+            }
+            await uploadAva(data)
+            res.status(200).json({
+                message: 'success',
                 data
             })
         } catch (error) {
