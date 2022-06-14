@@ -27,7 +27,16 @@ const workerModel = {
     },
     uploadAva: (data) => {
         return pool.query('UPDATE users SET profileimage = $1 WHERE iduser = $2', [data.image, data.id])
-    }
+    },
+    getAllProfile: (sortby, order, limit, offset) => {
+        return pool.query(`SELECT * FROM users ORDER BY ${sortby} ${order} LIMIT ${limit} OFFSET ${offset}`)
+    },
+    getALlProfileDefault: (limit, offset) =>{
+        return pool.query(`SELECT * FROM users LIMIT ${limit} OFFSET ${offset}`)
+    },
+    search: (search) => {
+        return pool.query('SELECT * FROM users WHERE fullname ILIKE $1', [search])
+    },
 }
 
 module.exports = workerModel

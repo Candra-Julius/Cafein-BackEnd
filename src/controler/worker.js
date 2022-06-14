@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const createError = require('http-errors') 
-const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva } = require('../modul/worker')
+const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva, getALlProfileDefault, getAllProfile } = require('../modul/worker');
+const workerModel = require('../modul/worker');
 const  cloudinary = require('cloudinary').v2;
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -128,6 +129,41 @@ const workerControl = {
                 message: 'success',
                 data
             })
+        } catch (error) {
+            console.log(error);
+            next(createError[500]('Internal Server Error'))
+        }
+    },
+    getAllProfile: async (req, res, next) => {
+        try {
+            const page = parseInt(req.query.page) || 1
+            const limit = parseInt(req.query.limit) || 12
+            const offset = (page - 1) * limit
+            const order = req.query.order || 'ASC'
+            const sortby = req.query.sortby
+            const search = req.query.search
+            if (search){
+                const {rows} = await workerModel.search(search) 
+                res.status(200).json({
+                    message: 'success',
+                    rows
+                })
+            }else {
+                if (sortby){
+                const {rows} = await getAllProfile(sortby, order, limit, offset)
+                res.status(200).json({
+                    message: 'success',
+                    rows
+                })
+            }else {
+                const {rows} = await getALlProfileDefault(limit, offset)
+                res.status(200).json({
+                    message: 'success',
+                    rows
+                })
+            }
+            }
+            
         } catch (error) {
             console.log(error);
             next(createError[500]('Internal Server Error'))
