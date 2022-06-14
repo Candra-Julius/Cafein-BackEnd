@@ -33,6 +33,29 @@ const workerControl = {
             next(createError[500]('internal server error'))
         }
     },
+    detailProfile: async(req, res, next) => {
+        try {
+            const id = req.params.id
+            const {rows: [result]} = await getProfile(id)
+            const {rows: skill} = await getSkill(id)
+            const {rows: port} = await getPortofolio(id)
+            const {rows: work} = await getWorkExp(id)
+            const data = {
+                ...result,
+                skill,
+                port,
+                work
+            }
+            delete data.password
+            res.status(200).json({
+                message: `wellcome ${result.fullname}`,
+                data
+            })
+        } catch (error) {
+            console.log(error);
+            next(createError[500]('internal server error'))
+        }
+    },
     editProfile: async(req, res, next) => {
         try {
             const id = req.payload.id
