@@ -1,10 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const auth =require('./auth')
-const worker = require('./worker.js')
+const express = require("express");
+const router = express.Router();
+const auth = require("./auth");
+const worker = require("./worker.js");
+const company = require("./company.js");
 
-router
-.use('/auth', auth)
-.use('/users', worker)
+router.use("/auth", auth).use("/users", worker).use("/company", company);
 
-module.exports = router
+module.exports = router;
