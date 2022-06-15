@@ -8,6 +8,5 @@ const company = require("./company.js");
 router
 .use('/auth', auth)
 .use('/users', worker)
-.get('/', workerControl.getAllProfile)
 .use("/company", company)
 module.exports = router
