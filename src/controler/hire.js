@@ -1,17 +1,15 @@
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
-const { getProfile, editProfile, deleteProfile } = require("../modul/hire");
+const { getHire, insertHire, editHire, deletehire } = require("../modul/hire");
 
 const hireControl = {
   getHire: async (req, res, next) => {
     try {
       const id = req.payload.id;
-      const {
-        rows: [result],
-      } = await getProfile(id);
-      delete result.password;
+      const { rows: result } = await getHire(id);
+      // delete result.password;
       res.status(200).json({
-        message: `wellcome ${result.name}`,
+        message: `wellcome `,
         result,
       });
     } catch (error) {
@@ -19,35 +17,60 @@ const hireControl = {
       next(createError[500]("internal server error"));
     }
   },
-  editProfile: async (req, res, next) => {
+  insertHire: async (req, res, next) => {
     try {
-      const id = req.payload.id;
-      console.log(result);
-      const { companyname, jobfield, companyaddress, description, emailcompany, instagram, companyphone, linkedin } = req.body;
+      const idcompany = req.payload.id;
+      const iduser = req.params.id;
+      const { name, email, phonenumber, description, project } = req.body;
       const data = {
-        id,
-        companyname,
-        jobfield,
-        companyaddress,
+        name,
+        email,
+        phonenumber,
         description,
-        emailcompany,
-        instagram,
-        companyphone,
-        linkedin,
-        profileimage: result.secure_url,
+        project,
+        iduser,
+        idcompany,
       };
-      await editProfile(data);
+      await insertHire(data);
+      console.log(data);
+      res.status(200).json({
+        data,
+        message: `data create success`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  editHire: async (req, res, next) => {
+    try {
+      const id = req.body.id;
+      // console.log(id);
+      const { name, email, phonenumber, description, project, iduser, idcompany } = req.body;
+      const data = {
+        name,
+        email,
+        phonenumber,
+        description,
+        project,
+        iduser,
+        idcompany,
+        id,
+      };
+      await editHire(data);
       console.log(data);
       res.status(200).json({
         data,
         message: `data update success`,
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   },
-  deleteProfile: async (req, res, next) => {
+  deletehire: async (req, res, next) => {
     try {
-      const id = req.payload.id;
-      await deleteProfile(id);
+      const id = req.body.id;
+      console.log(id);
+      await deletehire(id);
       res.json({
         message: "data berhasil di hapus",
       });
