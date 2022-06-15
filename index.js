@@ -5,6 +5,7 @@ const app = express();
 const morgan = require("morgan");
 const PORT = process.env.PORT || 2000;
 const versioning = require("./src/route/index");
+const bodyParser = require('body-parser')
 const cors = require("cors");
 
 //middleware
@@ -12,6 +13,7 @@ app.use(morgan("dev"));
 app.use(express());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(bodyParser.urlencoded())
 app.use(
   cors({
     origin: "*",
