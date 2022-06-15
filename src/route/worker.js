@@ -13,4 +13,5 @@ router
 .post('/portofolio', isLogin,upload.single('image'), workerControl.addPortofolio)
 .post('/upload', isLogin, upload.single('avatar'), workerControl.uploadAva)
 .get('/wroker', workerControl.getAllProfile)
+
 module.exports = router

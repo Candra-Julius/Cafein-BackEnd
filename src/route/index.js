@@ -9,4 +9,5 @@ router
 .use('/auth', auth)
 .use('/users', worker)
 .use("/company", company)
+.get('/home', workerControl.getAllProfile)
 module.exports = router

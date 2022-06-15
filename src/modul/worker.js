@@ -34,9 +34,12 @@ const workerModel = {
     getALlProfileDefault: (limit, offset) =>{
         return pool.query(`SELECT * FROM users LIMIT ${limit} OFFSET ${offset}`)
     },
-    search: (search) => {
-        return pool.query('SELECT * FROM users WHERE fullname ILIKE $1', [search])
+    searching: (search) => {
+        return pool.query('SELECT * FROM skill WHERE skillname ILIKE $1', [search])
     },
+    verifySkill: (skill,id) => {
+        return pool.query('select * from skill where skillname = $1 AND users_id = $2', [skill, id])
+    }
 }
 
 module.exports = workerModel
