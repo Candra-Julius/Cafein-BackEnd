@@ -38,7 +38,7 @@ const workerModel = {
         return pool.query('SELECT * FROM skill WHERE skillname ILIKE $1', [search])
     },
     verifySkill: (skill,id) => {
-        return pool.query('select * from skill where skillname = $1 AND users_id = $2', [skill, id])
+        return pool.query('select * from skill where skillname ILIKE $1 AND users_id = $2', [skill, id])
     }
 }
 
