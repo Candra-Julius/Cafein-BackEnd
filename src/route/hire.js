@@ -3,6 +3,6 @@ const hireControl = require("../controler/hire");
 const { isLogin } = require("../middleware/verification");
 const router = express.Router();
 
-router.get("/hire", isLogin, hireControl.getHire).post("/hire", isLogin, hireControl.insertHire);
+router.get("/", isLogin, hireControl.getHire).post("/:id", isLogin, hireControl.insertHire).put("/", hireControl.editHire).delete("/delete", hireControl.deletehire);
 
 module.exports = router;
