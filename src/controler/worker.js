@@ -193,12 +193,15 @@ const workerControl = {
             const { rows: [count] } = await countWorker()
             const totalData = parseInt(count.total)
             totalPage = Math.ceil(totalData / limit)
+            const pagination = {
+                currentPage: page,
+                limit,
+                totalData,
+                totalPage,
+            }
         res.status(200).json({
             message: 'success',
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
+            pagination,
             hasil
         })
             }else {
@@ -218,12 +221,15 @@ const workerControl = {
                 const { rows: [count] } = await countWorker()
             const totalData = parseInt(count.total)
             totalPage = Math.ceil(totalData / limit)
+            const pagination = {
+                currentPage: page,
+                limit,
+                totalData,
+                totalPage,
+            }
         res.status(200).json({
             message: 'success',
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
+            pagination,
             hasil
         })
             }else {
@@ -244,12 +250,15 @@ const workerControl = {
                 const { rows: [count] } = await countWorker()
             const totalData = parseInt(count.total)
             totalPage = Math.ceil(totalData / limit)
+            const pagination = {
+                currentPage: page,
+                limit,
+                totalData,
+                totalPage,
+            }
         res.status(200).json({
             message: 'success',
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
+            pagination,
             hasil
         })
             }
