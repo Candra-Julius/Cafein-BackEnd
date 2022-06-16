@@ -1,5 +1,5 @@
 const createError = require('http-errors') 
-const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva, getALlProfileDefault, getAllProfile, search, searching, verifySkill } = require('../modul/worker');
+const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva, getALlProfileDefault, getAllProfile, search, searching, verifySkill, countProducts, countWorker } = require('../modul/worker');
 const workerModel = require('../modul/worker');
 const { response } = require('express');
 const  cloudinary = require('cloudinary').v2;
@@ -190,8 +190,15 @@ const workerControl = {
                 }
                 return val
             })) 
+            const { rows: [count] } = await countWorker()
+            const totalData = parseInt(count.total)
+            totalPage = Math.ceil(totalData / limit)
         res.status(200).json({
             message: 'success',
+            currentPage: page,
+            limit,
+            totalData,
+            totalPage,
             hasil
         })
             }else {
@@ -208,14 +215,21 @@ const workerControl = {
                         }
                         return val
                 }))
-                res.status(200).json({
-                    message: 'success',
-                    result
-                })
+                const { rows: [count] } = await countWorker()
+            const totalData = parseInt(count.total)
+            totalPage = Math.ceil(totalData / limit)
+        res.status(200).json({
+            message: 'success',
+            currentPage: page,
+            limit,
+            totalData,
+            totalPage,
+            hasil
+        })
             }else {
                 const {rows} = await getALlProfileDefault(limit, offset)
                 const ids = rows.map((data)=> data.iduser)
-                const result = await Promise.all(ids.map(async(data)=>{
+                const hasil = await Promise.all(ids.map(async(data)=>{
                     const dataProfile = await getALlProfileDefault(limit, offset).then((res) => {return res.rows[0]})
                     const dataSkill = await workerModel.getSkill(data).then((res)=> {
                         return res.rows})
@@ -227,10 +241,17 @@ const workerControl = {
                         console.log(val);
                         return val
                 }))
-                res.status(200).json({
-                    message: 'success',
-                    result 
-                })
+                const { rows: [count] } = await countWorker()
+            const totalData = parseInt(count.total)
+            totalPage = Math.ceil(totalData / limit)
+        res.status(200).json({
+            message: 'success',
+            currentPage: page,
+            limit,
+            totalData,
+            totalPage,
+            hasil
+        })
             }
             }
             

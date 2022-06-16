@@ -39,6 +39,9 @@ const workerModel = {
     },
     verifySkill: (skill,id) => {
         return pool.query('select * from skill where skillname ILIKE $1 AND users_id = $2', [skill, id])
+    },
+    countWorker: () => {
+        return pool.query('SELECT COUNT(*) AS total FROM users')
     }
 }
 
