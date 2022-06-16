@@ -32,18 +32,6 @@ const companyControl = {
       const { company, jobfield, address, description, email, instagram, phone, linkedin } = req.body;
       const data = { id, company, jobfield, address, description, email, instagram, phone, linkedin };
       console.log(req.body);
-      // const { company, jobfield, address, description, email, instagram, phone, linkedin } = req.body;
-      // const data = {
-      //   id,
-      //   company,
-      //   jobfield,
-      //   address,
-      //   description,
-      //   email,
-      //   instagram,
-      //   phone,
-      //   linkedin,
-      // };
       await editProfile(data);
       console.log(data);
       res.status(200).json({
