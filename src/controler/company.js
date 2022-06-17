@@ -29,25 +29,14 @@ const companyControl = {
   editProfile: async (req, res, next) => {
     try {
       const id = req.payload.id;
-      console.log(id);
       const { company, jobfield, address, description, email, instagram, phone, linkedin } = req.body;
-      // console.log(companyname);
-      const data = {
-        id,
-        company,
-        jobfield,
-        address,
-        description,
-        email,
-        instagram,
-        phone,
-        linkedin,
-      };
+      const data = { id, company, jobfield, address, description, email, instagram, phone, linkedin };
+      console.log(req.body);
       await editProfile(data);
       console.log(data);
       res.status(200).json({
         data,
-        message: `data update success`,
+        message: `data profile company berhasil update `,
       });
     } catch (error) {
       console.log(error);
