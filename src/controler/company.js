@@ -30,7 +30,8 @@ const companyControl = {
     try {
       const id = req.payload.id;
       const { company, jobfield, address, description, email, instagram, phone, linkedin } = req.body;
-      const data = { id, company, jobfield, address, description, email, instagram, phone, linkedin };
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const data = { id, company, jobfield, address, description, email, instagram, phone, linkedin, image: result.secure_url };
       console.log(req.body);
       await editProfile(data);
       console.log(data);
@@ -52,32 +53,6 @@ const companyControl = {
     } catch (err) {
       console.log(err);
       next(new createError.InternalServerError());
-    }
-  },
-  profileImage: async (req, res, next) => {
-    try {
-      const id = req.payload.id;
-      const result = await cloudinary.uploader.upload(req.file.path);
-      const data = {
-        id,
-        image: result.secure_url,
-      };
-      await profileImage(data);
-      res.status(200).json({
-        message: "success",
-        data,
-      });
-    } catch (error) {
-      console.log(error);
-      next(createError[500]("Internal Server Error"));
-    }
-  },
-  test: async (req, res, next) => {
-    try {
-      const file = req.file;
-      res.send(file);
-    } catch (error) {
-      console.log(error);
     }
   },
 };

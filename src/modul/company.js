@@ -6,15 +6,12 @@ const companyModel = {
   },
   editProfile: (data) => {
     return pool.query(
-      `UPDATE company SET companyname = COALESCE ($1,companyname), jobfield = COALESCE ($2,jobfield), companyaddress = COALESCE ($3,companyaddress), description = COALESCE ($4,description), emailcompany = COALESCE ($5,emailcompany),instagram = COALESCE ($6,instagram),companyphone = COALESCE ($7,companyphone),linkedin = COALESCE ($8,linkedin) WHERE idcompany = $9`,
-      [data.company, data.jobfield, data.address, data.description, data.email, data.instagram, data.phone, data.linkedin, data.id]
+      `UPDATE company SET companyname = COALESCE ($1,companyname), jobfield = COALESCE ($2,jobfield), companyaddress = COALESCE ($3,companyaddress), description = COALESCE ($4,description), emailcompany = COALESCE ($5,emailcompany),instagram = COALESCE ($6,instagram),companyphone = COALESCE ($7,companyphone),linkedin = COALESCE ($8,linkedin),profileimage = COALESCE ($9,profileimage) WHERE idcompany = $10`,
+      [data.company, data.jobfield, data.address, data.description, data.email, data.instagram, data.phone, data.linkedin, data.image, data.id]
     );
   },
   deleteProfile: (id) => {
     return pool.query("DELETE FROM company WHERE id = $1", [id]);
-  },
-  profileImage: (data) => {
-    return pool.query("UPDATE company SET profileimage = $1 WHERE idcompany = $2", [data.image, data.id]);
   },
 };
 
