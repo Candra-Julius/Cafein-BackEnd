@@ -1,6 +1,6 @@
 
 const createError = require('http-errors') 
-const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva, getALlProfileDefault, getAllProfile, search, searching, verifySkill, countProducts, countWorker } = require('../modul/worker');
+const { getProfile, getSkill, getPortofolio, editProfile, addSkill, getWorkExp, addWorkExp, addPortofolio, uploadAva, getALlProfileDefault, getAllProfile, searching, verifySkill, countWorker, editAllProfile } = require('../modul/worker');
 const workerModel = require('../modul/worker');
 const { response } = require('express');
 const  cloudinary = require('cloudinary').v2;
@@ -62,18 +62,38 @@ const workerControl = {
             const id = req.payload.id
         console.log(id);
         const {fullname, jobdesk, address, workplace, description} = req.body
-        const data = {
+        const file = req.file
+        if(file){
+            const result = await cloudinary.uploader.upload(req.file.path)
+            const data = {
+                id,
+                fullname,
+                jobdesk,
+                address,
+                workplace,
+                description,
+                image: result.secure_url
+            }
+            await editAllProfile(data)
+        res.status(200).json({
+            data
+        })
+        }else{
+            const data = {
             id,
             fullname,
             jobdesk,
             address,
             workplace,
             description,
+            // image: result.secure_url
         }
+        console.log(data);
         await editProfile(data)
         res.status(200).json({
             data
         })
+        }
         } catch (error) {
             console.log(error);
             next(createError[500]('Internal Server Error'))
@@ -149,24 +169,24 @@ const workerControl = {
             next(createError[500]('Internal Server Error'))
         }
     },
-    uploadAva: async (req, res, next) =>{
-        try {
-            const id = req.payload.id
-            const result = await cloudinary.uploader.upload(req.file.path)
-            const data = {
-                id,
-                image: result.secure_url
-            }
-            await uploadAva(data)
-            res.status(200).json({
-                message: 'success',
-                data
-            })
-        } catch (error) {
-            console.log(error);
-            next(createError[500]('Internal Server Error'))
-        }
-    },
+    // uploadAva: async (req, res, next) =>{
+    //     try {
+    //         const id = req.payload.id
+    //         const result = await cloudinary.uploader.upload(req.file.path)
+    //         const data = {
+    //             id,
+    //             image: result.secure_url
+    //         }
+    //         await uploadAva(data)
+    //         res.status(200).json({
+    //             message: 'success',
+    //             data
+    //         })
+    //     } catch (error) {
+    //         console.log(error);
+    //         next(createError[500]('Internal Server Error'))
+    //     }
+    // },
     getAllProfile: async (req, res, next) => {
         try {
             const page = parseInt(req.query.page) || 1
