@@ -1,7 +1,7 @@
 const express = require('express')
 const workerControl = require('../controler/worker')
 const router = express.Router()
-const auth =require('./auth')
+const auth = require('./auth')
 const worker = require('./worker.js')
 const company = require("./company.js");
 const hire = require("./hire.js");

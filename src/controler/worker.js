@@ -11,11 +11,12 @@ const {
   uploadAva,
   getALlProfileDefault,
   getAllProfile,
-  search,
   searching,
   verifySkill,
-  countProducts,
   countWorker,
+  editAllProfile,
+  getHire,
+  editHire,
 } = require("../modul/worker");
 const workerModel = require("../modul/worker");
 const { response } = require("express");
@@ -82,18 +83,38 @@ const workerControl = {
       const id = req.payload.id;
       console.log(id);
       const { fullname, jobdesk, address, workplace, description } = req.body;
-      const data = {
-        id,
-        fullname,
-        jobdesk,
-        address,
-        workplace,
-        description,
-      };
-      await editProfile(data);
-      res.status(200).json({
-        data,
-      });
+      const file = req.file;
+      if (file) {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        const data = {
+          id,
+          fullname,
+          jobdesk,
+          address,
+          workplace,
+          description,
+          image: result.secure_url,
+        };
+        await editAllProfile(data);
+        res.status(200).json({
+          data,
+        });
+      } else {
+        const data = {
+          id,
+          fullname,
+          jobdesk,
+          address,
+          workplace,
+          description,
+          // image: result.secure_url
+        };
+        console.log(data);
+        await editProfile(data);
+        res.status(200).json({
+          data,
+        });
+      }
     } catch (error) {
       console.log(error);
       next(createError[500]("Internal Server Error"));
@@ -166,24 +187,6 @@ const workerControl = {
       next(createError[500]("Internal Server Error"));
     }
   },
-  uploadAva: async (req, res, next) => {
-    try {
-      const id = req.payload.id;
-      const result = await cloudinary.uploader.upload(req.file.path);
-      const data = {
-        id,
-        image: result.secure_url,
-      };
-      await uploadAva(data);
-      res.status(200).json({
-        message: "success",
-        data,
-      });
-    } catch (error) {
-      console.log(error);
-      next(createError[500]("Internal Server Error"));
-    }
-  },
   getAllProfile: async (req, res, next) => {
     try {
       const page = parseInt(req.query.page) || 1;
@@ -194,25 +197,33 @@ const workerControl = {
       const search = req.query.search;
       if (search) {
         const { rows } = await searching(search);
-        const result = rows.map((data) => data.users_id);
-        console.log(result);
-        const hasil = await Promise.all(
-          result.map(async (data) => {
-            const dataProfile = await workerModel.getProfile(data).then((res) => {
-              return res.rows[0];
-            });
-            // console.log(dataProfile);
-            const dataSkill = await workerModel.getSkill(data).then((res) => {
-              delete res.rows.users_id;
+        const ids = rows.map((data) => data.users_id);
+        const data = await Promise.all(
+          ids.map(async (datas) => {
+            return (profile = await getProfile(datas).then((res) => {
               return res.rows;
-            });
-            const val = {
-              ...dataProfile,
-              dataSkill,
-            };
-            return val;
+            }));
           })
         );
+        const hasil = await Promise.all(
+          ids.map(async (data) => {
+            return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+              return res.rows;
+            }));
+          })
+        );
+        let datas;
+        let skill = {};
+        let val = [];
+        for (let i = 0; i < data.length; i++) {
+          datas = data[i];
+          skill = hasil[i].map((item) => item.skillname);
+          val.push({
+            ...datas[i],
+            skill,
+          });
+        }
+        console.log(val);
         const {
           rows: [count],
         } = await countWorker();
@@ -227,63 +238,31 @@ const workerControl = {
         res.status(200).json({
           message: "success",
           pagination,
-          hasil,
+          val,
         });
       } else {
         if (sortby) {
           const { rows } = await getAllProfile(sortby, order, limit, offset);
           const ids = rows.map((data) => data.iduser);
-          const result = await Promise.all(
-            ids.map(async (data) => {
-              const dataProfile = await getAllProfile(sortby, order, limit, offset).then((res) => {
-                return res.rows[0];
-              });
-              const dataSkill = await workerModel.getSkill(data).then((res) => {
-                return res.rows;
-              });
-              const val = {
-                ...dataProfile,
-                dataSkill,
-              };
-              return val;
-            })
-          );
-          const {
-            rows: [count],
-          } = await countWorker();
-          const totalData = parseInt(count.total);
-          totalPage = Math.ceil(totalData / limit);
-          const pagination = {
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
-          };
-          res.status(200).json({
-            message: "success",
-            pagination,
-            hasil,
-          });
-        } else {
-          const { rows } = await getALlProfileDefault(limit, offset);
-          const ids = rows.map((data) => data.iduser);
           const hasil = await Promise.all(
             ids.map(async (data) => {
-              const dataProfile = await getALlProfileDefault(limit, offset).then((res) => {
-                return res.rows[0];
-              });
-              const dataSkill = await workerModel.getSkill(data).then((res) => {
+              return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
                 return res.rows;
-              });
-              // console.log(dataProfile);
-              const val = {
-                ...dataProfile,
-                dataSkill,
-              };
-              console.log(val);
-              return val;
+              }));
             })
           );
+          let datas;
+          let skill = {};
+          let val = [];
+          for (let i = 0; i < rows.length; i++) {
+            datas = rows[i];
+            skill = hasil[i].map((item) => item.skillname);
+            val.push({
+              ...datas,
+              skill,
+            });
+          }
+          console.log(val);
           const {
             rows: [count],
           } = await countWorker();
@@ -298,7 +277,45 @@ const workerControl = {
           res.status(200).json({
             message: "success",
             pagination,
-            hasil,
+            val,
+          });
+        } else {
+          const { rows: data } = await getALlProfileDefault(limit, offset);
+          const ids = data.map((data) => data.iduser);
+          const hasil = await Promise.all(
+            ids.map(async (data) => {
+              return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+                return res.rows;
+              }));
+            })
+          );
+          let datas;
+          let skill = {};
+          let val = [];
+          for (let i = 0; i < data.length; i++) {
+            datas = data[i];
+            skill = hasil[i].map((item) => item.skillname);
+            val.push({
+              ...datas,
+              skill,
+            });
+          }
+          console.log(val);
+          const {
+            rows: [count],
+          } = await countWorker();
+          const totalData = parseInt(count.total);
+          totalPage = Math.ceil(totalData / limit);
+          const pagination = {
+            currentPage: page,
+            limit,
+            totalData,
+            totalPage,
+          };
+          res.status(200).json({
+            message: "success",
+            pagination,
+            val,
           });
         }
       }
@@ -307,5 +324,40 @@ const workerControl = {
       next(createError[500]("Internal Server Error"));
     }
   },
+  getHire: async (req, res, next) => {
+    try {
+      const id = req.payload.id;
+      const { rows: result } = await getHire(id);
+      // delete result.password;
+      console.log("worker hire", result);
+      res.status(200).json({
+        message: `Company Call for you`,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+      next(createError[500]("internal server error"));
+    }
+  },
+  editHire: async (req, res, next) => {
+    try {
+      const id = req.payload.id;
+      console.log(id);
+      const { status } = req.body;
+      const data = {
+        status,
+        id,
+      };
+      await editHire(data);
+      console.log(data);
+      res.status(200).json({
+        data,
+        message: `data update success`,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
+
 module.exports = workerControl;

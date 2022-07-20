@@ -164,9 +164,7 @@ const authControl = {
             const idname = 'iduser'
             console.log(route);
             await activate(route, idname,strId)
-            res.status(200).json({
-                message: 'account activated'
-            })
+            res.redirect('')
         }else {
             const route = 'company'
             const idname = 'idcompany'
