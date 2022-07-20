@@ -198,15 +198,12 @@ const workerControl = {
       if (search) {
         const { rows } = await searching(search);
         const ids = rows.map((data) => data.users_id);
-        const data = await Promise.all(
-          ids.map(async (datas) => {
+        const data = await Promise.all(ids.map(async(datas) => {
             return (profile = await getProfile(datas).then((res) => {
-              return res.rows;
-            }));
-          })
-        );
+                return res.rows
+            }))
+        }))
         const hasil = await Promise.all(
-
             ids.map(async (data) => {
               return ([dataSkill] = await workerModel
                 .getSkill(data)
@@ -239,33 +236,17 @@ const workerControl = {
             pagination,
             val,
           });
-        }
-        console.log(val);
-        const {
-          rows: [count],
-        } = await countWorker();
-        const totalData = parseInt(count.total);
-        totalPage = Math.ceil(totalData / limit);
-        const pagination = {
-          currentPage: page,
-          limit,
-          totalData,
-          totalPage,
-        };
-        res.status(200).json({
-          message: "success",
-          pagination,
-          val,
-        });
       } else {
         if (sortby) {
           const { rows } = await getAllProfile(sortby, order, limit, offset);
           const ids = rows.map((data) => data.iduser);
           const hasil = await Promise.all(
             ids.map(async (data) => {
-              return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
-                return res.rows;
-              }));
+              return ([dataSkill] = await workerModel
+                .getSkill(data)
+                .then((res) => {
+                  return res.rows;
+                }));
             })
           );
           let datas;
@@ -301,9 +282,11 @@ const workerControl = {
           const ids = data.map((data) => data.iduser);
           const hasil = await Promise.all(
             ids.map(async (data) => {
-              return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
-                return res.rows;
-              }));
+              return ([dataSkill] = await workerModel
+                .getSkill(data)
+                .then((res) => {
+                  return res.rows;
+                }));
             })
           );
           let datas;
@@ -335,7 +318,7 @@ const workerControl = {
             val,
           });
         }
-      }
+        }
     } catch (error) {
       console.log(error);
       next(createError[500]("Internal Server Error"));
