@@ -206,21 +206,38 @@ const workerControl = {
           })
         );
         const hasil = await Promise.all(
-          ids.map(async (data) => {
-            return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
-              return res.rows;
-            }));
-          })
-        );
-        let datas;
-        let skill = {};
-        let val = [];
-        for (let i = 0; i < data.length; i++) {
-          datas = data[i];
-          skill = hasil[i].map((item) => item.skillname);
-          val.push({
-            ...datas[i],
-            skill,
+
+            ids.map(async (data) => {
+              return ([dataSkill] = await workerModel
+                .getSkill(data)
+                .then((res) => {
+                  return res.rows;
+                }));
+            })
+          );
+          let datas;
+          let skill = {};
+          let val = [];
+          for (let i = 0; i < data.length; i++) {
+            datas = data[i];
+            skill = hasil[i].map((item) => item.skillname);
+            val.push({
+              ...datas[i],
+              skill,
+            });
+          }
+          const totalData = ids.length
+          totalPage = Math.ceil(totalData / limit);
+          const pagination = {
+            currentPage: page,
+            limit,
+            totalData,
+            totalPage,
+          };
+          res.status(200).json({
+            message: "success",
+            pagination,
+            val,
           });
         }
         console.log(val);
