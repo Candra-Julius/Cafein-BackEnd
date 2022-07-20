@@ -221,11 +221,7 @@ const workerControl = {
               skill,
             });
           }
-          console.log(val);
-          const {
-            rows: [count],
-          } = await countWorker();
-          const totalData = parseInt(count.total);
+          const totalData = ids.length
           totalPage = Math.ceil(totalData / limit);
           const pagination = {
             currentPage: page,
