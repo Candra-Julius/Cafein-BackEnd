@@ -55,6 +55,22 @@ const companyControl = {
       next(new createError.InternalServerError());
     }
   },
+  getProfileByParams: async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const {
+        rows: [result],
+      } = await getProfile(id);
+      delete result.password;
+      res.status(200).json({
+        message: `wellcome ${result.name}`,
+        result,
+      });
+    } catch (error) {
+      console.log(error);
+      next(createError[500]("internal server error"));
+    }
+  },
 };
 
 module.exports = companyControl;
