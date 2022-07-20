@@ -9,7 +9,7 @@ const hireControl = {
       const { rows: result } = await getHire(id);
       // delete result.password;
       res.status(200).json({
-        message: `wellcome `,
+        message: `Worker List`,
         result,
       });
     } catch (error) {
