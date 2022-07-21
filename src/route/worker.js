@@ -16,8 +16,8 @@ router
   .get("/hire", isLogin, workerControl.getHire)
   .put("/hire", isLogin, workerControl.editHire)
   .put("/hirenotif", isLogin, workerControl.isRead)
-  .delete('deleteskill/:name', isLogin, workerControl.deleteSkill)
-  .delete('deleteporto/:name', isLogin, workerControl.deletePorto);
+  .delete('/deleteskill/:name', isLogin, workerControl.deleteSkill)
+  .delete('/deleteporto/:name', isLogin, workerControl.deletePorto);
 
 
 module.exports = router;
