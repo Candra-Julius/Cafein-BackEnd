@@ -76,10 +76,10 @@ const workerModel = {
     return pool.query("DELETE FROM skill WHERE users_id = $1 AND skillname $2", [data.id, data.name]);
   },
   checkPorto: (data) => {
-    return pool.query('SELECT * FROM portofolio WHERE id = $1 AND aplicationname = $2', [data.id, data.name])
+    return pool.query('SELECT * FROM portofolio WHERE id ILIKE $1 AND aplicationname ILIKE $2', [data.id, data.name])
   },
   deletePorto: (data) => {
-    return pool.query('DELETE FROM portofolio WHERE id = $1 AND aplicationname = $2', [data.id, data.name])
+    return pool.query('DELETE FROM portofolio WHERE id ILIKE $1 AND aplicationname ILIKE $2', [data.id, data.name])
   }
 };
 
