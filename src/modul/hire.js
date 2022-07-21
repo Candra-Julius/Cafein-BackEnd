@@ -8,7 +8,16 @@ const hireModel = {
     );
   },
   insertHire: (data) => {
-    return pool.query("INSERT INTO hire(name,email,phonenumber,description,project,iduser,idcompany)VALUES($1,$2,$3,$4,$5,$6,$7)", [data.name, data.email, data.phonenumber, data.description, data.project, data.iduser, data.idcompany]);
+    return pool.query("INSERT INTO hire(name,email,phonenumber,description,project,iduser,isread,idcompany)VALUES($1,$2,$3,$4,$5,$6,$7,$8)", [
+      data.name,
+      data.email,
+      data.phonenumber,
+      data.description,
+      data.project,
+      data.iduser,
+      data.isread,
+      data.idcompany,
+    ]);
   },
   editHire: (data) => {
     return pool.query("UPDATE Hire SET name = $1, email = $2, phonenumber = $3, description = $4, project = $5,iduser =$6,idcompany=$7 WHERE id = $8", [

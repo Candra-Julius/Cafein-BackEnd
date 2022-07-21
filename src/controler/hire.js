@@ -21,7 +21,7 @@ const hireControl = {
     try {
       const idcompany = req.payload.id;
       const iduser = req.params.id;
-      const { name, email, phonenumber, description, project } = req.body;
+      const { name, email, phonenumber, description, project, isread } = req.body;
       const data = {
         name,
         email,
@@ -30,6 +30,7 @@ const hireControl = {
         project,
         iduser,
         idcompany,
+        isread: isread || 0,
       };
       await insertHire(data);
       console.log(data);

@@ -59,19 +59,25 @@ const workerModel = {
   },
   getHire: (id) => {
     return pool.query(
-      " SELECT company.companyname,hire.name AS hrdName,hire.email As hrdEmail, hire.phonenumber AS hrdEmail, hire.project, hire.description, hire.status,hire.id, hire.iduser, hire.idcompany,users.jobstatus, users.fullname As workerName FROM hire INNER JOIN company ON hire.idcompany = company.idcompany  INNER JOIN users  ON hire.iduser = users.iduser   where hire.iduser=$1",
+      " SELECT company.companyname,hire.name AS hrdName,hire.email As hrdEmail, hire.phonenumber AS hrdEmail, hire.project, hire.description, hire.status,hire.id, hire.iduser, hire.idcompany,users.jobstatus, users.fullname As workerName, hire.isread FROM hire INNER JOIN company ON hire.idcompany = company.idcompany  INNER JOIN users  ON hire.iduser = users.iduser   where hire.iduser=$1",
       [id]
     );
   },
   editHire: (data) => {
     return pool.query("UPDATE Hire SET status = $1 WHERE id = $2", [data.status, data.id]);
   },
+
+  notif: (data) => {
+    return pool.query("UPDATE Hire SET isread = $1 WHERE id = $2", [data.isread, data.id]);
+  },
+
   checkSkill: (data)=> {
     return pool.query('SELECT * FROM skill WHERE users_id = $1 AND skillname = $2', [data.id, data.name])
   },
   deleteSkill: (data) => {
     return pool.query('DELETE FROM skill WHERE users_id = $1 AND skillname $2', [data.id, data.name])
   }
+
 };
 
 module.exports = workerModel;

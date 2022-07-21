@@ -15,6 +15,8 @@ router
   .get("/wroker", workerControl.getAllProfile)
   .get("/hire", isLogin, workerControl.getHire)
   .put("/hire", isLogin, workerControl.editHire)
+  .put("/hirenotif", isLogin, workerControl.isRead)
   .delete('deleteskill/:name', isLogin, workerControl.deleteSkill);
+
 
 module.exports = router;

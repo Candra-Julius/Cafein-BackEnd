@@ -18,6 +18,7 @@ const {
   getHire,
   editHire,
   getAllProfileWithSort,
+  notif,
   deleteSkill,
   checkSkill,
 } = require("../modul/worker");
@@ -199,16 +200,18 @@ const workerControl = {
       const sortby = req.query.sortby;
       const search = req.query.search;
 
-      if(search && sortby){
-
+      if (search && sortby) {
         const { rows } = await searching(search);
         const ids = rows.map((data) => data.users_id);
-        const data = await Promise.all(ids.map(async(datas) => {
+        const data = await Promise.all(
+          ids.map(async (datas) => {
             return (profile = await getAllProfileWithSort(datas, sortby, order, limit, offset).then((res) => {
-                return res.rows
-            }))
-        }))
+              return res.rows;
+            }));
+          })
+        );
         const hasil = await Promise.all(
+
             ids.map(async (data) => {
               return ([dataSkill] = await workerModel
                 .getSkill(data)
@@ -241,11 +244,27 @@ const workerControl = {
             pagination,
             val,
           });
-      }else if (search) {
+        }
+        const totalData = ids.length;
+        totalPage = Math.ceil(totalData / limit);
+        const pagination = {
+          currentPage: page,
+          limit,
+          totalData,
+          totalPage,
+        };
+        res.status(200).json({
+          message: "success",
+          pagination,
+          val,
+        });
+      } else if (search) {
         const { rows } = await searching(search);
         const ids = rows.map((data) => data.users_id);
-        const data = await Promise.all(ids.map(async(datas) => {
+        const data = await Promise.all(
+          ids.map(async (datas) => {
             return (profile = await getProfile(datas).then((res) => {
+
                 return res.rows
             }))
         })) 
@@ -282,17 +301,16 @@ const workerControl = {
             pagination,
             val,
           });
+
       } else {
         if (sortby) {
           const { rows } = await getAllProfile(sortby, order, limit, offset);
           const ids = rows.map((data) => data.iduser);
           const hasil = await Promise.all(
             ids.map(async (data) => {
-              return ([dataSkill] = await workerModel
-                .getSkill(data)
-                .then((res) => {
-                  return res.rows;
-                }));
+              return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+                return res.rows;
+              }));
             })
           );
           let datas;
@@ -328,11 +346,9 @@ const workerControl = {
           const ids = data.map((data) => data.iduser);
           const hasil = await Promise.all(
             ids.map(async (data) => {
-              return ([dataSkill] = await workerModel
-                .getSkill(data)
-                .then((res) => {
-                  return res.rows;
-                }));
+              return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+                return res.rows;
+              }));
             })
           );
           let datas;
@@ -364,7 +380,7 @@ const workerControl = {
             val,
           });
         }
-        }
+      }
     } catch (error) {
       console.log(error);
       next(createError[500]("Internal Server Error"));
@@ -402,6 +418,24 @@ const workerControl = {
     } catch (error) {
       console.log(error);
       next(createError[500]("internal server error"))
+    }
+  },
+  isRead: async (req, res, next) => {
+    try {
+      const { isread, id } = req.body;
+      const data = {
+        isread,
+        id,
+      };
+      await notif(data);
+      console.log(data);
+
+      res.status(200).json({
+        data,
+        message: `Notif update Success`,
+      });
+    } catch (error) {
+      console.log(error);
     }
   },
   deleteSkill: async(req, res, next) => {
