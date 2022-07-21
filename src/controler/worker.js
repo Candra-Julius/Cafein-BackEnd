@@ -21,6 +21,8 @@ const {
   deleteSkill,
   checkSkill,
   notif,
+  checkPorto,
+  deletePorto,
 } = require("../modul/worker");
 const workerModel = require("../modul/worker");
 const { response } = require("express");
@@ -441,8 +443,33 @@ const workerControl = {
       });
     } catch (error) {
       console.log(error);
+      next(createError[500]("internal server error"));
     }
   },
+  deletePorto: async(req, res, next)=>{
+    try {
+      const name = req.params.name
+      const id = req.payload.id
+      const data ={
+        name,
+        id
+      }
+      const {rowCount} = await checkPorto(data)
+      if(!rowCount) {
+        res.status(400).json({
+          message: 'There is no such data'
+        })
+      }else{
+        await deletePorto(data)
+        res.status(200).json({
+          message: 'Data has been deleted'
+        })
+      }
+    } catch (error) {
+      console.log(error);
+      next(createError[500]("internal server error"));
+    }
+  }
 };
 
 module.exports = workerControl;
