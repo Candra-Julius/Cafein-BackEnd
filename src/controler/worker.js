@@ -222,7 +222,7 @@ const workerControl = {
             datas = data[i];
             skill = hasil[i].map((item) => item.skillname);
             val.push({
-              ...datas[i],
+              ...datas[0],
               skill,
             });
           }
@@ -267,7 +267,6 @@ const workerControl = {
               skill,
             });
           }
-          console.log(val);
           const totalData = ids.length
           totalPage = Math.ceil(totalData / limit);
           const pagination = {
