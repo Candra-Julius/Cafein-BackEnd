@@ -17,6 +17,7 @@ const {
   editAllProfile,
   getHire,
   editHire,
+  getAllProfileWithSort,
 } = require("../modul/worker");
 const workerModel = require("../modul/worker");
 const { response } = require("express");
@@ -195,7 +196,48 @@ const workerControl = {
       const order = req.query.order || "ASC";
       const sortby = req.query.sortby;
       const search = req.query.search;
-      if (search) {
+      if (search && sortby) {
+        const { rows } = await searching(search);
+        const ids = rows.map((data) => data.users_id);
+        const data = await Promise.all(
+          ids.map(async (datas) => {
+            return (profile = await getAllProfileWithSort(datas, sortby, order, limit, offset).then((res) => {
+              return res.rows;
+            }));
+          })
+        );
+        const hasil = await Promise.all(
+          ids.map(async (data) => {
+            return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+              return res.rows;
+            }));
+          })
+        );
+        let datas;
+        let skill = {};
+        let val = [];
+        for (let i = 0; i < data.length; i++) {
+          datas = data[i];
+          skill = hasil[i].map((item) => item.skillname);
+          val.push({
+            ...datas[i],
+            skill,
+          });
+        }
+        const totalData = ids.length;
+        totalPage = Math.ceil(totalData / limit);
+        const pagination = {
+          currentPage: page,
+          limit,
+          totalData,
+          totalPage,
+        };
+        res.status(200).json({
+          message: "success",
+          pagination,
+          val,
+        });
+      } else if (search) {
         const { rows } = await searching(search);
         const ids = rows.map((data) => data.users_id);
         const data = await Promise.all(
@@ -206,45 +248,24 @@ const workerControl = {
           })
         );
         const hasil = await Promise.all(
-
-            ids.map(async (data) => {
-              return ([dataSkill] = await workerModel
-                .getSkill(data)
-                .then((res) => {
-                  return res.rows;
-                }));
-            })
-          );
-          let datas;
-          let skill = {};
-          let val = [];
-          for (let i = 0; i < data.length; i++) {
-            datas = data[i];
-            skill = hasil[i].map((item) => item.skillname);
-            val.push({
-              ...datas[i],
-              skill,
-            });
-          }
-          const totalData = ids.length
-          totalPage = Math.ceil(totalData / limit);
-          const pagination = {
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
-          };
-          res.status(200).json({
-            message: "success",
-            pagination,
-            val,
+          ids.map(async (data) => {
+            return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+              return res.rows;
+            }));
+          })
+        );
+        let datas;
+        let skill = {};
+        let val = [];
+        for (let i = 0; i < data.length; i++) {
+          datas = data[i];
+          skill = hasil[i].map((item) => item.skillname);
+          val.push({
+            ...datas[i],
+            skill,
           });
         }
-        console.log(val);
-        const {
-          rows: [count],
-        } = await countWorker();
-        const totalData = parseInt(count.total);
+        const totalData = ids.length;
         totalPage = Math.ceil(totalData / limit);
         const pagination = {
           currentPage: page,
