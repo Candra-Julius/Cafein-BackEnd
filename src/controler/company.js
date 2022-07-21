@@ -45,7 +45,7 @@ const companyControl = {
         instagram: instagram || null,
         phone: phone || null,
         linkedin: linkedin || null,
-        image: result?.url || null,
+        profileimage: result?.url || null,
       };
       console.log(req.body);
       await editProfile(data);

@@ -16,7 +16,7 @@ const companyModel = {
       companyphone = COALESCE($7,companyphone),
       linkedin = COALESCE($8,linkedin),
       profileimage = COALESCE($9,profileimage) WHERE idcompany = $10`,
-      [data.company, data.jobfield, data.address, data.description, data.email, data.instagram, data.phone, data.linkedin, data.image, data.id]
+      [data.company, data.jobfield, data.address, data.description, data.email, data.instagram, data.phone, data.linkedin, data.profileimage, data.id]
     );
   },
   deleteProfile: (id) => {
