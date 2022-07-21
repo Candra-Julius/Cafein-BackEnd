@@ -4,6 +4,9 @@ const workerModel = {
   getProfile: (id) => {
     return pool.query("SELECT * FROM users where iduser = $1", [id]);
   },
+  getAllProfileWithSort: (id, sortby, order, limit, offset) => {
+    return pool.query(`SELECT * FROM users WHERE iduser = '${id}' ORDER BY ${sortby} ${order} LIMIT ${limit} OFFSET ${offset} `);
+  },
   editProfile: (data) => {
     return pool.query("UPDATE users SET fullname = $1, jobdesk = $2, address = $3, workplace = $4, description = $5 WHERE iduser = $6", [data.fullname, data.jobdesk, data.address, data.workplace, data.description, data.id]);
   },
