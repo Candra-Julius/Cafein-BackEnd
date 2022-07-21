@@ -246,9 +246,8 @@ const workerControl = {
             return (profile = await getProfile(datas).then((res) => {
                 return res.rows
             }))
-        }))
+        })) 
         const hasil = await Promise.all(
-
             ids.map(async (data) => {
               return ([dataSkill] = await workerModel
                 .getSkill(data)
@@ -264,10 +263,11 @@ const workerControl = {
             datas = data[i];
             skill = hasil[i].map((item) => item.skillname);
             val.push({
-              ...datas[i],
+              ...datas[0],
               skill,
             });
           }
+          console.log(val);
           const totalData = ids.length
           totalPage = Math.ceil(totalData / limit);
           const pagination = {
@@ -281,7 +281,6 @@ const workerControl = {
             pagination,
             val,
           });
-
       } else {
         if (sortby) {
           const { rows } = await getAllProfile(sortby, order, limit, offset);
