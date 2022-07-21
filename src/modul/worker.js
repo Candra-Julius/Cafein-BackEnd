@@ -66,6 +66,12 @@ const workerModel = {
   editHire: (data) => {
     return pool.query("UPDATE Hire SET status = $1 WHERE id = $2", [data.status, data.id]);
   },
+  checkSkill: (data)=> {
+    return pool.query('SELECT * FROM skill WHERE users_id = $1 AND skillname = $2', [data.id, data.name])
+  },
+  deleteSkill: (data) => {
+    return pool.query('DELETE FROM skill WHERE users_id = $1 AND skillname $2', [data.id, data.name])
+  }
 };
 
 module.exports = workerModel;

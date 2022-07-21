@@ -14,6 +14,7 @@ router
   .post("/portofolio", isLogin, upload.single("image"), workerControl.addPortofolio)
   .get("/wroker", workerControl.getAllProfile)
   .get("/hire", isLogin, workerControl.getHire)
-  .put("/hire", isLogin, workerControl.editHire);
+  .put("/hire", isLogin, workerControl.editHire)
+  .delete('deleteskill/:name', isLogin, workerControl.deleteSkill);
 
 module.exports = router;

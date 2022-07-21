@@ -18,6 +18,8 @@ const {
   getHire,
   editHire,
   getAllProfileWithSort,
+  deleteSkill,
+  checkSkill,
 } = require("../modul/worker");
 const workerModel = require("../modul/worker");
 const { response } = require("express");
@@ -399,8 +401,34 @@ const workerControl = {
       });
     } catch (error) {
       console.log(error);
+      next(createError[500]("internal server error"))
     }
   },
+  deleteSkill: async(req, res, next) => {
+    try {
+      const name = req.params.name
+      const id = req.payload.id
+      const data = {
+        name,
+        id
+      }
+      const {rowCount} = await checkSkill(data)
+      if(!rowCount){
+        res.status(400).json({
+          message: 'data doesnt exist'
+        })
+      }else{
+      await deleteSkill(data)
+      res.status(200).json({
+        message: 'Skill deleted',
+        data
+      })
+      }
+    } catch (error) {
+      console.log(error);
+      next(createError[500]("internal server error"))
+    }
+  }
 };
 
 module.exports = workerControl;
