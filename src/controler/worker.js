@@ -341,18 +341,17 @@ const workerControl = {
   },
   editHire: async (req, res, next) => {
     try {
-      const id = req.payload.id;
-      console.log(id);
-      const { status } = req.body;
+      const { status, id } = req.body;
       const data = {
         status,
         id,
       };
       await editHire(data);
       console.log(data);
+
       res.status(200).json({
         data,
-        message: `data update success`,
+        message: `data hire update success`,
       });
     } catch (error) {
       console.log(error);

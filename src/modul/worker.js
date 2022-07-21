@@ -55,10 +55,13 @@ const workerModel = {
     return pool.query("SELECT COUNT(*) AS total FROM users");
   },
   getHire: (id) => {
-    return pool.query("SELECT company.companyname,hire.name,hire.email,hire.phonenumber, hire.project,hire.description,hire.status,hire.id FROM hire INNER JOIN company ON hire.idcompany = company.idcompany where hire.iduser=$1", [id]);
+    return pool.query(
+      " SELECT company.companyname,hire.name AS hrdName,hire.email As hrdEmail, hire.phonenumber AS hrdEmail, hire.project, hire.description, hire.status,hire.id, hire.iduser, hire.idcompany,users.jobstatus, users.fullname As workerName FROM hire INNER JOIN company ON hire.idcompany = company.idcompany  INNER JOIN users  ON hire.iduser = users.iduser   where hire.iduser=$1",
+      [id]
+    );
   },
   editHire: (data) => {
-    return pool.query("UPDATE Hire SET status = $1 WHERE iduser = $2", [data.status, data.id]);
+    return pool.query("UPDATE Hire SET status = $1 WHERE id = $2", [data.status, data.id]);
   },
 };
 
