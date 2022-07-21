@@ -30,8 +30,23 @@ const companyControl = {
     try {
       const id = req.payload.id;
       const { company, jobfield, address, description, email, instagram, phone, linkedin } = req.body;
-      const result = await cloudinary.uploader.upload(req.file.path);
-      const data = { id, company, jobfield, address, description, email, instagram, phone, linkedin, image: result.secure_url };
+      const img = req.file?.path;
+      let result;
+      if (img) {
+        result = await cloudinary.uploader.upload(req.file.path);
+      }
+      const data = {
+        id,
+        company: company || null,
+        jobfield: jobfield || null,
+        address: address || null,
+        description: description || null,
+        email: email || null,
+        instagram: instagram || null,
+        phone: phone || null,
+        linkedin: linkedin || null,
+        image: result?.url || null,
+      };
       console.log(req.body);
       await editProfile(data);
       console.log(data);
