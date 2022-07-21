@@ -18,9 +18,9 @@ const {
   getHire,
   editHire,
   getAllProfileWithSort,
-  notif,
   deleteSkill,
   checkSkill,
+  notif,
 } = require("../modul/worker");
 const workerModel = require("../modul/worker");
 const { response } = require("express");
@@ -211,38 +211,21 @@ const workerControl = {
           })
         );
         const hasil = await Promise.all(
-
-            ids.map(async (data) => {
-              return ([dataSkill] = await workerModel
-                .getSkill(data)
-                .then((res) => {
-                  return res.rows;
-                }));
-            })
-          );
-          let datas;
-          let skill = {};
-          let val = [];
-          for (let i = 0; i < data.length; i++) {
-            datas = data[i];
-            skill = hasil[i].map((item) => item.skillname);
-            val.push({
-              ...datas[0],
-              skill,
-            });
-          }
-          const totalData = ids.length
-          totalPage = Math.ceil(totalData / limit);
-          const pagination = {
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
-          };
-          res.status(200).json({
-            message: "success",
-            pagination,
-            val,
+          ids.map(async (data) => {
+            return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+              return res.rows;
+            }));
+          })
+        );
+        let datas;
+        let skill = {};
+        let val = [];
+        for (let i = 0; i < data.length; i++) {
+          datas = data[i];
+          skill = hasil[i].map((item) => item.skillname);
+          val.push({
+            ...datas[0],
+            skill,
           });
         }
         const totalData = ids.length;
@@ -264,44 +247,41 @@ const workerControl = {
         const data = await Promise.all(
           ids.map(async (datas) => {
             return (profile = await getProfile(datas).then((res) => {
-
-                return res.rows
-            }))
-        })) 
+              return res.rows;
+            }));
+          })
+        );
         const hasil = await Promise.all(
-            ids.map(async (data) => {
-              return ([dataSkill] = await workerModel
-                .getSkill(data)
-                .then((res) => {
-                  return res.rows;
-                }));
-            })
-          );
-          let datas;
-          let skill = {};
-          let val = [];
-          for (let i = 0; i < data.length; i++) {
-            datas = data[i];
-            skill = hasil[i].map((item) => item.skillname);
-            val.push({
-              ...datas[0],
-              skill,
-            });
-          }
-          const totalData = ids.length
-          totalPage = Math.ceil(totalData / limit);
-          const pagination = {
-            currentPage: page,
-            limit,
-            totalData,
-            totalPage,
-          };
-          res.status(200).json({
-            message: "success",
-            pagination,
-            val,
+          ids.map(async (data) => {
+            return ([dataSkill] = await workerModel.getSkill(data).then((res) => {
+              return res.rows;
+            }));
+          })
+        );
+        let datas;
+        let skill = {};
+        let val = [];
+        for (let i = 0; i < data.length; i++) {
+          datas = data[i];
+          skill = hasil[i].map((item) => item.skillname);
+          val.push({
+            ...datas[0],
+            skill,
           });
-
+        }
+        const totalData = ids.length;
+        totalPage = Math.ceil(totalData / limit);
+        const pagination = {
+          currentPage: page,
+          limit,
+          totalData,
+          totalPage,
+        };
+        res.status(200).json({
+          message: "success",
+          pagination,
+          val,
+        });
       } else {
         if (sortby) {
           const { rows } = await getAllProfile(sortby, order, limit, offset);
@@ -417,7 +397,32 @@ const workerControl = {
       });
     } catch (error) {
       console.log(error);
-      next(createError[500]("internal server error"))
+      next(createError[500]("internal server error"));
+    }
+  },
+  deleteSkill: async (req, res, next) => {
+    try {
+      const name = req.params.name;
+      const id = req.payload.id;
+      const data = {
+        name,
+        id,
+      };
+      const { rowCount } = await checkSkill(data);
+      if (!rowCount) {
+        res.status(400).json({
+          message: "data doesnt exist",
+        });
+      } else {
+        await deleteSkill(data);
+        res.status(200).json({
+          message: "Skill deleted",
+          data,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      next(createError[500]("internal server error"));
     }
   },
   isRead: async (req, res, next) => {
@@ -438,31 +443,6 @@ const workerControl = {
       console.log(error);
     }
   },
-  deleteSkill: async(req, res, next) => {
-    try {
-      const name = req.params.name
-      const id = req.payload.id
-      const data = {
-        name,
-        id
-      }
-      const {rowCount} = await checkSkill(data)
-      if(!rowCount){
-        res.status(400).json({
-          message: 'data doesnt exist'
-        })
-      }else{
-      await deleteSkill(data)
-      res.status(200).json({
-        message: 'Skill deleted',
-        data
-      })
-      }
-    } catch (error) {
-      console.log(error);
-      next(createError[500]("internal server error"))
-    }
-  }
 };
 
 module.exports = workerControl;
