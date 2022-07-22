@@ -164,16 +164,14 @@ const authControl = {
             const idname = 'iduser'
             console.log(route);
             await activate(route, idname,strId)
-            res.redirect('')
+            res.redirect('https://fe-cafein-je871yrpg-nisrinanataraharja.vercel.app/login')
         }else {
             const route = 'company'
             const idname = 'idcompany'
             console.log(route);
             console.log(idname);
             await activate(route, idname, strId)
-            res.status(200).json({
-                message: 'account activated'
-            })
+            res.redirect('https://fe-cafein-je871yrpg-nisrinanataraharja.vercel.app/login')
         }
         } catch (error) {
             console.log(error);
